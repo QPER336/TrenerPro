@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - TrenerPro</title>
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+</head>
+<body>
+    <div class="app-container">
+        <nav class="sidebar">
+            <div class="brand">
+                <a asp-controller="Home" asp-action="Index">
+                    <img src="~/images/logo.jpg" alt="BeFit Logo" class="logo-img" />
+                </a>
+            </div>
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="user-info-panel">
+                    <div class="user-label">Zalogowany jako</div>
+                    <div class="user-email">@User.Identity.Name</div>
+                </div>
+            }
+
+            <ul class="nav-links">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <li>
+                        <a class="nav-link" asp-controller="Clients" asp-action="Index">
+                            <i class="fa-solid fa-users"></i> Podopieczni
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link" asp-controller="Payments" asp-action="Index">
+                            <i class="fa-solid fa-money-bill-wave"></i> Płatności
+                        </a>
+                    </li>
+
+                    <li style="margin-top: auto;">
+                        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                            <button type="submit" class="nav-link" style="background: none; border: none; width: 100%; cursor: pointer; color: #ef4444; justify-content: flex-start;">
+                                <i class="fa-solid fa-right-from-bracket"></i> Wyloguj
+                            </button>
+                        </form>
+                    </li>
+                }
+                else
+                {
+                    <li>
+                        <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">
+                            <i class="fa-solid fa-key"></i> Zaloguj
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link" asp-area="Identity" asp-page="/Account/Register">
+                            <i class="fa-solid fa-user-plus"></i> Rejestracja
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+
+            <ul class="nav-links">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <li>
+                        <a class="nav-link" asp-controller="Clients" asp-action="Index">
+                            <i class="fa-solid fa-users"></i> Podopieczni
+                        </a>
+                    </li>
+                    <li>
+                        <a class="nav-link" asp-controller="Payments" asp-action="Index">
+                            <i class="fa-solid fa-money-bill-wave"></i> Płatności
+                        </a>
+                    </li>
+
+                    <div style="margin-top: auto;">
+                    <li style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
+                        <div style="color: #94a3b8; font-size: 0.8rem; margin-bottom: 0.5rem; padding-left: 1rem;">
+                            Zalogowany jako: <br /> <span style="color:white;">@User.Identity.Name</span>
+                        </div>
+                        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                            <button type="submit" class="nav-link" style="background: none; border: none; width: 100%; cursor: pointer; color: #ef4444;">
+                                <i class="fa-solid fa-right-from-bracket"></i> Wyloguj
+                            </button>
+                        </form>
+                    </li>
+        </div>
+    }
+    else
+    {
+        <li>
+            <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">
+                <i class="fa-solid fa-key"></i> Zaloguj
+            </a>
+        </li>
+        <li>
+            <a class="nav-link" asp-area="Identity" asp-page="/Account/Register">
+                <i class="fa-solid fa-user-plus"></i> Rejestracja
+            </a>
+        </li>
+    }
+    </ul>
+    </nav>
+
+    <main class="main-content">
+        @RenderBody()
+    </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

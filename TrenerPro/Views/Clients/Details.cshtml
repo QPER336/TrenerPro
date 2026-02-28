@@ -1,0 +1,133 @@
+﻿@model TrenerPro.Models.Client
+
+@{
+    ViewData["Title"] = "Profil Klienta";
+}
+
+<div class="glass-card mb-4">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+            <div class="avatar" style="width: 80px; height: 80px; font-size: 2rem; margin-bottom: 1rem;">
+                @if (!string.IsNullOrEmpty(Model.FirstName) && !string.IsNullOrEmpty(Model.LastName))
+                {
+                    @Model.FirstName.Substring(0, 1)
+                    @Model.LastName.Substring(0, 1)
+                }
+                else
+                {
+                    <i class="fa-solid fa-user"></i>
+                }
+            </div>
+            <h1 style="margin: 0;">@Model.FullName</h1>
+            <p style="color: var(--primary); font-weight: 600;">@Html.DisplayFor(model => model.ServiceType)</p>
+        </div>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn-modern">
+                <i class="fa-solid fa-pen"></i> Edytuj Profil
+            </a>
+            <a asp-action="Index" class="btn-outline" style="display: inline-block; margin-left: 10px;">Powrót</a>
+        </div>
+    </div>
+
+    <hr style="border-color: rgba(255,255,255,0.1); margin: 2rem 0;">
+
+    <div class="row">
+        <div class="col-sm-3 mb-3">
+            <span style="color: var(--text-muted); font-size: 0.9rem;">Wiek</span>
+            <div style="font-size: 1.2rem; font-weight: 600;">@Model.Age lat</div>
+        </div>
+        <div class="col-sm-3 mb-3">
+            <span style="color: var(--text-muted); font-size: 0.9rem;">Waga Startowa</span>
+            <div style="font-size: 1.2rem; font-weight: 600;">@Model.StartWeight kg</div>
+        </div>
+        <div class="col-sm-3 mb-3">
+            <span style="color: var(--text-muted); font-size: 0.9rem;">Waga Aktualna</span>
+            <div style="font-size: 1.2rem; font-weight: 600; color: var(--accent);">@Model.CurrentWeight kg</div>
+        </div>
+        <div class="col-sm-3 mb-3">
+            <span style="color: var(--text-muted); font-size: 0.9rem;">Dołączył</span>
+            <div style="font-size: 1.2rem; font-weight: 600;">@Model.JoinDate.ToShortDateString()</div>
+        </div>
+    </div>
+</div>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; margin-top: 2rem;">
+    <h3>Historia Płatności</h3>
+
+    <form asp-action="AddNextPayment" asp-route-id="@Model.Id" method="post">
+        <button type="submit" class="btn-modern" style="font-size: 0.9rem; padding: 10px 20px;">
+            <i class="fa-solid fa-calendar-plus"></i> Dodaj kolejny miesiąc
+        </button>
+    </form>
+</div>
+
+@if (Model.Payments.Any())
+{
+    <div class="glass-card" style="padding: 0; overflow-x: auto; margin-bottom: 2rem;">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Opis</th>
+                    <th>Kwota</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Payments.OrderByDescending(p => p.PaymentDate))
+                {
+                    <tr>
+                        <td>@item.PaymentDate.ToShortDateString()</td>
+                        <td>@item.Description</td>
+                        <td style="font-weight: bold;">@item.Amount PLN</td>
+                        <td>
+                            @if (item.IsConfirmed)
+                            {
+                                <span class="badge-custom badge-success">Opłacone</span>
+                            }
+                            else
+                            {
+                                <form asp-controller="Payments" asp-action="Confirm" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                    <button type="submit" class="badge-custom badge-pending" style="border:none; cursor:pointer;" title="Kliknij, aby zatwierdzić">
+                                        Oczekuje (Zatwierdź)
+                                    </button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="glass-card" style="text-align: center; padding: 3rem; margin-bottom: 2rem;">
+        <i class="fa-solid fa-receipt" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem; opacity: 0.3;"></i>
+        <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Ten klient nie ma jeszcze historii płatności.</p>
+        <form asp-action="AddNextPayment" asp-route-id="@Model.Id" method="post">
+            <button type="submit" class="btn-modern">
+                <i class="fa-solid fa-plus"></i> Utwórz pierwszą płatność
+            </button>
+        </form>
+    </div>
+}
+
+<div class="glass-card mb-4" style="background: rgba(0,0,0,0.6); border-left: 4px solid var(--text-muted);">
+    <h3 style="margin-bottom: 1rem; color: var(--text-muted); font-size: 1rem;">
+        <i class="fa-solid fa-lock"></i> Notatki Prywatne (Tylko dla Ciebie)
+    </h3>
+
+    <form asp-action="UpdateNotes" asp-route-id="@Model.Id" method="post">
+        <div class="form-group mb-3">
+            <textarea name="notes" class="form-control" rows="3"
+                      placeholder="Wpisz tutaj ważne informacje o kliencie (np. kontuzje, preferencje, cele)..."
+                      style="background: rgba(255,255,255,0.05); color: white; border: 1px solid #333;">@Model.Notes</textarea>
+        </div>
+        <div style="text-align: right;">
+            <button type="submit" class="btn-modern" style="padding: 5px 20px; font-size: 0.9rem;">
+                <i class="fa-solid fa-floppy-disk"></i> Zapisz notatkę
+            </button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,67 @@
+﻿@model TrenerPro.Models.Payment
+
+@{
+    ViewData["Title"] = "Edytuj Płatność";
+}
+
+<h1>Edycja Płatności</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-6 glass-card" style="margin: 0 auto;">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group mb-3">
+                <label asp-for="ClientId" class="control-label">Klient</label>
+                <select asp-for="ClientId" class="form-control" asp-items="ViewBag.ClientId"></select>
+                <span asp-validation-for="ClientId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="PaymentDate" class="control-label"></label>
+                <input asp-for="PaymentDate" class="form-control" />
+                <span asp-validation-for="PaymentDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Amount" class="control-label"></label>
+
+                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                    <button type="button" class="btn-outline" onclick="setAmount(130)">130 PLN</button>
+                    <button type="button" class="btn-outline" onclick="setAmount(150)">150 PLN</button>
+                    <button type="button" class="btn-outline" onclick="setAmount(250)">250 PLN</button>
+                </div>
+
+                <input asp-for="Amount" id="amountInput" class="form-control" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+
+            <div class="form-group form-check mb-4" style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsConfirmed" style="background-color: #000; border-color: #555;" />
+                    @Html.DisplayNameFor(model => model.IsConfirmed) (Zaznacz, jeśli opłacono)
+                </label>
+            </div>
+
+            <div class="form-group d-grid gap-2">
+                <input type="submit" value="Zapisz Zmiany" class="btn-modern" style="justify-content: center;" />
+                <a asp-action="Index" class="btn-outline">Anuluj / Powrót</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function setAmount(value) {
+        document.getElementById('amountInput').value = value;
+    }
+</script>

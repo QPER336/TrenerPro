@@ -1,0 +1,101 @@
+﻿@model IEnumerable<TrenerPro.Models.Payment>
+
+@{
+    ViewData["Title"] = "Finanse";
+}
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h1>Historia Płatności</h1>
+    <a asp-action="Create" class="btn-modern">
+        <i class="fa-solid fa-coins"></i> Dodaj Wpłatę
+    </a>
+</div>
+
+<form asp-action="Index" method="get" style="margin-bottom: 20px;">
+    <div class="glass-card" style="padding: 1rem; display: flex; gap: 10px; align-items: center;">
+        <i class="fa-solid fa-search" style="color: var(--text-muted);"></i>
+        <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]"
+               class="form-control" placeholder="Szukaj po nazwisku lub opisie..."
+               style="margin: 0; background: transparent !important; border: none !important; padding: 0;" />
+        <button type="submit" class="btn-modern" style="padding: 5px 15px;">Szukaj</button>
+        <a asp-action="Index" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Wyczyść</a>
+    </div>
+</form>
+
+<div class="glass-card" style="padding: 0; overflow-x: auto;">
+    <table class="custom-table">
+        <thead>
+            <tr>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["AmountSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" style="color: var(--text-muted); text-decoration: none;">
+                        Kwota <i class="fa-solid fa-sort"></i>
+                    </a>
+                </th>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" style="color: var(--text-muted); text-decoration: none;">
+                        Klient <i class="fa-solid fa-sort"></i>
+                    </a>
+                </th>
+                <th>Opis</th>
+                <th>
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]" style="color: var(--text-muted); text-decoration: none;">
+                        Data <i class="fa-solid fa-sort"></i>
+                    </a>
+                </th>
+                <th>Status</th>
+                <th>Akcje</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="font-weight: 700; font-size: 1.1rem;">
+                        @item.Amount PLN
+                    </td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div class="avatar" style="width: 30px; height: 30px; font-size: 0.8rem;">
+                                @item.Client.FirstName.Substring(0, 1)
+                            </div>
+                            @item.Client.FullName
+                        </div>
+                    </td>
+                    <td style="color: var(--text-muted);">
+                        @item.Description
+                    </td>
+                    <td>
+                        @item.PaymentDate.ToShortDateString()
+                    </td>
+                    <td>
+                        @if (!item.IsConfirmed)
+                        {
+                            <span class="badge-custom badge-pending">Oczekuje</span>
+                        }
+                        else
+                        {
+                            <span class="badge-custom badge-success">Opłacone</span>
+                        }
+                    </td>
+                    <td>
+                        @if (!item.IsConfirmed)
+                        {
+                            <form asp-action="Confirm" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                <button type="submit" class="btn-modern" style="padding: 5px 15px; font-size: 0.8rem;">
+                                    <i class="fa-solid fa-check"></i>
+                                </button>
+                            </form>
+                        }
+
+                        <a asp-action="Edit" asp-route-id="@item.Id" style="margin-left: 10px; color: var(--text-muted);">
+                            <i class="fa-solid fa-pen"></i>
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" style="margin-left: 10px; color: var(--danger);">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

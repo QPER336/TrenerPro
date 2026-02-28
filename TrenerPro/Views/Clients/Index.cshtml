@@ -1,0 +1,53 @@
+﻿@model IEnumerable<TrenerPro.Models.Client>
+
+@{
+    ViewData["Title"] = "Podopieczni";
+}
+
+<div style="display: flex; justify-content: space-between; align-items: center;">
+    <h1>Moi Podopieczni</h1>
+    <a asp-action="Create" class="btn-modern">
+        <i class="fa-solid fa-plus"></i> Nowy Klient
+    </a>
+</div>
+
+<div class="cards-grid">
+    @foreach (var item in Model)
+    {
+        <div class="glass-card">
+            <div class="card-header">
+                <div class="avatar">
+                    @item.FirstName.Substring(0, 1)@item.LastName.Substring(0, 1)
+                </div>
+                <div class="actions">
+                    <a asp-action="Edit" asp-route-id="@item.Id" style="color: var(--text-muted); margin-right: 10px;">
+                        <i class="fa-solid fa-pen"></i>
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" style="color: var(--danger);">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+                </div>
+            </div>
+
+            <h3 class="client-name">@item.FullName</h3>
+            <p class="client-detail" style="color: var(--primary);">@Html.DisplayFor(m => item.ServiceType)</p>
+
+            <hr style="border-color: rgba(255,255,255,0.1);">
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1rem;">
+                <div>
+                    <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">Waga Start</span>
+                    <span style="font-weight: 600;">@item.StartWeight kg</span>
+                </div>
+                <div>
+                    <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">Aktualna</span>
+                    <span style="font-weight: 600; color: var(--primary);">@item.CurrentWeight kg</span>
+                </div>
+            </div>
+
+            <a asp-action="Details" asp-route-id="@item.Id" class="btn-outline" style="width: 100%; display: block; text-align: center;">
+                Zobacz Profil <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+    }
+</div>

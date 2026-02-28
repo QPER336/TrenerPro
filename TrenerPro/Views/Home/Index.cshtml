@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Witaj";
+}
+
+<div class="hero-section">
+    <img src="~/images/logo.jpg" alt="BeFit Logo" class="hero-logo" />
+
+    <h1 class="hero-title">ZARZĄDZAJ. TRENUJ. WYGRYWAJ.</h1>
+
+    <p class="hero-subtitle">
+        Twój czas jest cenny – nie trać go na papierkową robotę. <br />
+        <span style="color: var(--text-white);">BeFit</span> to Twoje centrum dowodzenia: podopieczni, plany i finanse w jednym miejscu.
+        Skup się na tym, co kochasz. Resztą zajmiemy się my.
+    </p>
+
+    <div class="hero-actions">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <a asp-controller="Home" asp-action="Dashboard" class="btn-modern btn-hero">
+                <i class="fa-solid fa-gauge-high"></i> Panel Trenera
+            </a>
+        }
+        else
+        {
+            <a asp-area="Identity" asp-page="/Account/Login" class="btn-modern btn-hero">
+                Zaloguj się
+            </a>
+
+            <a asp-area="Identity" asp-page="/Account/Register" class="btn-outline btn-hero" style="background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2);">
+                Dołącz do elity
+            </a>
+        }
+    </div>
+
+    <div style="margin-top: 4rem; color: var(--text-muted); font-size: 0.8rem; opacity: 0.5;">
+        <i class="fa-solid fa-bolt" style="color: var(--accent);"></i> POWERED BY BEFIT SYSTEM
+    </div>
+</div>

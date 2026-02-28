@@ -1,0 +1,107 @@
+﻿@model TrenerPro.Models.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Centrum Dowodzenia";
+}
+
+<h1 style="margin-bottom: 30px;">Centrum Dowodzenia</h1>
+
+<div class="row mb-4">
+    <div class="col-md-6 mb-3">
+        <div class="glass-card" style="display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, rgba(20,20,20,0.9), rgba(40,40,40,0.4)); border-left: 5px solid #10b981;">
+            <div>
+                <p style="color: var(--text-muted); margin: 0; font-size: 0.9rem;">Przychód (Bieżący Miesiąc)</p>
+                <h2 style="margin: 0; color: #10b981; font-weight: 800;">@Model.MonthlyRevenue PLN</h2>
+            </div>
+            <i class="fa-solid fa-money-bill-wave" style="font-size: 2.5rem; color: #10b981; opacity: 0.5;"></i>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="glass-card" style="display: flex; align-items: center; justify-content: space-between; border-left: 5px solid var(--primary);">
+            <div>
+                <p style="color: var(--text-muted); margin: 0; font-size: 0.9rem;">Aktywni Podopieczni</p>
+                <h2 style="margin: 0; color: white; font-weight: 800;">@Model.ActiveClientsCount</h2>
+            </div>
+            <i class="fa-solid fa-users" style="font-size: 2.5rem; color: var(--primary); opacity: 0.5;"></i>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="glass-card" style="height: 100%;">
+            <h4 style="margin-bottom: 20px; color: var(--accent);">
+                <i class="fa-solid fa-hourglass-half"></i> Kończą się w tym tygodniu
+            </h4>
+
+            @if (Model.ExpiringClients.Any())
+            {
+                <table class="custom-table">
+                    <tbody>
+                        @foreach (var client in Model.ExpiringClients)
+                        {
+                            <tr>
+                                <td>@client.FullName</td>
+                                <td style="text-align: right; color: var(--danger); font-weight: bold;">
+                                    @client.PlanEndDate.ToShortDateString()
+                                </td>
+                                <td style="width: 50px;">
+                                    <a asp-controller="Clients" asp-action="Details" asp-route-id="@client.Id" class="btn-outline" style="padding: 2px 8px; font-size: 0.8rem;">
+                                        <i class="fa-solid fa-arrow-right"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p style="color: var(--text-muted);">Spokój. Nikt nie kończy planu w najbliższym tygodniu.</p>
+            }
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="glass-card" style="height: 100%;">
+            <h4 style="margin-bottom: 20px; color: #f59e0b;">
+                <i class="fa-solid fa-triangle-exclamation"></i> Oczekujące wpłaty
+            </h4>
+
+            @if (Model.PendingPayments.Any())
+            {
+                <table class="custom-table">
+                    <tbody>
+                        @foreach (var payment in Model.PendingPayments)
+                        {
+                            <tr>
+                                <td>@payment.Client.FullName</td>
+                                <td>@payment.Description</td>
+                                <td style="font-weight: bold;">@payment.Amount PLN</td>
+                                <td style="width: 50px;">
+                                    <a asp-controller="Payments" asp-action="Index" class="btn-outline" style="padding: 2px 8px; font-size: 0.8rem;">
+                                        <i class="fa-solid fa-check"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p style="color: var(--text-muted);">Wszystko opłacone! Czyste konto.</p>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="d-grid gap-2 d-md-block">
+    <a asp-controller="Clients" asp-action="Create" class="btn-modern me-2">
+        <i class="fa-solid fa-user-plus"></i> Dodaj Klienta
+    </a>
+    <a asp-controller="Payments" asp-action="Create" class="btn-outline">
+        <i class="fa-solid fa-coins"></i> Rejestruj Płatność
+    </a>
+</div>
