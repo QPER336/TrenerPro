@@ -1,36 +1,57 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
 :root {
     /* Paleta kolorów */
-    --bg-dark: #0a0a0a; /* Głęboka czerń */
-    --card-bg: #141414; /* Ciemny grafit dla kart */
-    --primary: #8b5cf6; /* Neonowy fiolet */
+    --bg-dark: #0a0a0a;
+    --card-bg: #141414;
+    --primary: #8b5cf6;
     --primary-hover: #7c3aed;
-    --accent: #ec4899; /* Różowy akcent */
-
-    --text-white: #ffffff; /* Czysta biel dla menu */
-    --text-body: #e2e8f0; /* Lekko złamana biel dla treści */
-    --text-muted: #94a3b8; /* Szary dla mniej ważnych rzeczy */
-
+    --accent: #ec4899;
+    /* Tekst */
+    --text-white: #ffffff;
+    --text-body: #e2e8f0;
+    --text-muted: #94a3b8;
+    /* Efekty */
     --radius: 16px;
     --shadow: 0 10px 30px -10px rgba(139, 92, 246, 0.3);
 }
 
 /* --- GLOBALNE USTAWIENIA --- */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 html, body {
     height: 100%;
     margin: 0;
     font-family: 'Poppins', sans-serif;
-    /* !important wymusza czarne tło nadpisując Bootstrapa */
     background-color: var(--bg-dark) !important;
     color: var(--text-body) !important;
 }
+
+/* Niestandardowy pasek przewijania dla ciemnego motywu */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 4px;
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--primary);
+    }
 
 /* --- UKŁAD STRONY --- */
 .app-container {
     display: flex;
     min-height: 100vh;
-    background-color: var(--bg-dark); /* Zabezpieczenie tła */
+    background-color: var(--bg-dark);
 }
 
 /* --- SIDEBAR (Panel Boczny) --- */
@@ -40,10 +61,12 @@ html, body {
     padding: 2rem;
     display: flex;
     flex-direction: column;
-    border-right: 1px solid rgba(255,255,255,0.05);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
     position: fixed;
     height: 100vh;
     z-index: 100;
+    overflow-y: auto; /* Zabezpieczenie na wypadek długiego menu */
+    transition: transform 0.3s ease;
 }
 
 /* --- LOGO I NAGŁÓWEK --- */
@@ -61,7 +84,7 @@ html, body {
     height: auto;
     border-radius: 12px;
     box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: block;
 }
 
@@ -137,6 +160,7 @@ html, body {
     background-color: var(--bg-dark);
     background-image: radial-gradient(circle at top right, rgba(139, 92, 246, 0.1), transparent 40%);
     min-height: 100vh;
+    transition: margin-left 0.3s ease, padding 0.3s ease;
 }
 
 /* --- TYPOGRAFIA --- */
@@ -167,9 +191,9 @@ p {
     background: var(--card-bg);
     border-radius: var(--radius);
     padding: 2rem;
-    border: 1px solid rgba(255,255,255,0.05);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    transition: transform 0.3s ease, border-color 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
     .glass-card:hover {
@@ -238,12 +262,11 @@ p {
         }
 
 /* ========================================= */
-/* --- KOMPLETNY SYSTEM PRZYCISKÓW (FIX) --- */
+/* --- KOMPLETNY SYSTEM PRZYCISKÓW --- */
 /* ========================================= */
 
-/* Wspólne style dla wszystkich guzików */
 .btn-modern, .btn-outline, input[type="submit"].btn-modern {
-    text-decoration: none !important; /* Usuwa podkreślenie linków */
+    text-decoration: none !important;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -257,11 +280,10 @@ p {
     font-size: 0.95rem;
 }
 
-/* Styl GŁÓWNY (Gradient - Zapisz, Dodaj, Edytuj) */
+/* Styl GŁÓWNY */
 .btn-modern, input[type="submit"].btn-modern {
     background: linear-gradient(135deg, var(--primary), var(--accent));
     color: white !important;
-    border: none;
     box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
 }
 
@@ -269,10 +291,9 @@ p {
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba(139, 92, 246, 0.6);
         filter: brightness(1.1);
-        color: white !important;
     }
 
-/* Styl DRUGRZĘDNY (Ramka - Powrót, Anuluj) */
+/* Styl DRUGRZĘDNY */
 .btn-outline {
     background: transparent;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
@@ -284,10 +305,9 @@ p {
         border-color: var(--primary) !important;
         color: white !important;
         transform: translateY(-2px);
-        text-decoration: none !important;
     }
 
-/* Małe linki tekstowe w tabelach (np. edytuj, usuń) */
+/* Linki tekstowe */
 a[href*="Edit"], a[href*="Delete"], a[href*="Details"] {
     text-decoration: none !important;
     font-weight: 500;
@@ -295,7 +315,6 @@ a[href*="Edit"], a[href*="Delete"], a[href*="Details"] {
     display: inline-block;
 }
 
-    /* Specyficzne kolory dla linków tekstowych */
     a[href*="Edit"]:not(.btn-modern) {
         color: var(--text-white);
     }
@@ -320,9 +339,10 @@ a[href*="Delete"] {
     border-radius: 8px;
 }
 
-    .form-control:focus {
+    .form-control:focus, select.form-control:focus {
         border-color: var(--primary) !important;
         box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.3) !important;
+        outline: none;
     }
 
 label {
@@ -350,7 +370,7 @@ label {
     color: var(--accent);
 }
 
-/* --- FIX DLA LISTY ROZWIJANEJ --- */
+/* FIX DLA LISTY ROZWIJANEJ */
 select.form-control {
     background-color: #0a0a0a !important;
     color: #ffffff !important;
@@ -362,11 +382,6 @@ select.form-control {
         padding: 10px 5px;
         font-size: 1rem;
     }
-
-select:-internal-list-box option:checked {
-    background-color: #8b5cf6 !important;
-    color: white !important;
-}
 
 /* --- LANDING PAGE --- */
 .hero-section {
@@ -438,3 +453,35 @@ select:-internal-list-box option:checked {
         transform: translateY(-5px);
         box-shadow: 0 10px 30px -5px rgba(139, 92, 246, 0.5);
     }
+
+/* ========================================= */
+/* --- RESPONSYWNOŚĆ (Urządzenia mobilne) --- */
+/* ========================================= */
+@media (max-width: 992px) {
+    .main-content {
+        margin-left: 0;
+        padding: 2rem 1rem;
+    }
+
+    .sidebar {
+        transform: translateX(-100%); /* Ukrywa pasek z lewej strony na telefonach */
+    }
+
+        /* Jeśli dodasz w JS klasę .open do sidebara, wysunie się na ekran */
+        .sidebar.open {
+            transform: translateX(0);
+            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+        }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+    }
+}

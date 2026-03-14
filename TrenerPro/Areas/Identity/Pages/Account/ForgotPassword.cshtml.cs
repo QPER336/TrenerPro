@@ -54,7 +54,7 @@ namespace TrenerPro.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(Input.Email);
-                if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+                if (user == null )
                 {
                     // Don't reveal that the user does not exist or is not confirmed
                     return RedirectToPage("./ForgotPasswordConfirmation");
@@ -70,15 +70,38 @@ namespace TrenerPro.Areas.Identity.Pages.Account
                     values: new { area = "Identity", code },
                     protocol: Request.Scheme);
 
+                string emailTemplate = $@"
+<div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #1a1a1a; color: #ffffff;'>
+    <div style='text-align: center; margin-bottom: 20px;'>
+        <h2 style='color: #8b5cf6;'>💪 BeFit - System Trenera</h2>
+    </div>
+    
+    <div style='background-color: #2d2d2d; padding: 20px; border-radius: 8px; text-align: center;'>
+        <h3 style='margin-top: 0; color: #ffffff;'>Resetowanie hasła</h3>
+        <p style='color: #cccccc; line-height: 1.5; font-size: 16px;'>
+            Otrzymaliśmy prośbę o zresetowanie hasła do Twojego konta. Jeśli to nie Ty, zignoruj tę wiadomość.
+        </p>
+        <p style='color: #cccccc; line-height: 1.5;'>Aby ustawić nowe hasło, kliknij poniższy przycisk:</p>
+        
+        <div style='margin: 30px 0;'>
+            <a href='{HtmlEncoder.Default.Encode(callbackUrl)}' style='background-color: #8b5cf6; color: white; padding: 14px 28px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block; font-size: 16px;'>Zresetuj hasło</a>
+        </div>
+
+        <p style='color: #888888; font-size: 12px; border-top: 1px solid #444; padding-top: 15px; text-align: left;'>
+            Jeśli przycisk nie działa, skopiuj i wklej ten link bezpośrednio do przeglądarki:<br>
+            <a href='{HtmlEncoder.Default.Encode(callbackUrl)}' style='color: #8b5cf6; word-break: break-all;'>{HtmlEncoder.Default.Encode(callbackUrl)}</a>
+        </p>
+    </div>
+</div>";
+
+                // Wysyłamy maila z użyciem szablonu
                 await _emailSender.SendEmailAsync(
                     Input.Email,
-                    "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                return RedirectToPage("./ForgotPasswordConfirmation");
+                    "BeFit - Zresetuj swoje hasło",
+                    emailTemplate);
             }
 
-            return Page();
+            return RedirectToPage("./ForgotPasswordConfirmation");
         }
     }
 }
