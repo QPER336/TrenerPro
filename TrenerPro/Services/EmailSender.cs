@@ -16,12 +16,8 @@ namespace TrenerPro.Services
 
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            // var server = _configuration["EmailSettings:SmtpServer"];
-            // var port = int.Parse(_configuration["EmailSettings:Port"]);
-            //var user = _configuration["EmailSettings:SenderEmail"];
-            // var pass = _configuration["EmailSettings:SenderPassword"];
             var server = "sandbox.smtp.mailtrap.io";
-            var port = 2525; // lub 587
+            var port = 2525; 
             var user = "57fbb90e8127dd";
             var pass = "4ebf709156ebac";
 
@@ -31,8 +27,6 @@ namespace TrenerPro.Services
             message.Subject = subject;
 
             var bodyBuilder = new BodyBuilder { HtmlBody = htmlMessage };
-
-            // --- TUTAJ JEST POPRAWKA ---
             message.Body = bodyBuilder.ToMessageBody();
 
             using var client = new SmtpClient();
@@ -44,9 +38,9 @@ namespace TrenerPro.Services
                 await client.SendAsync(message);
                 await client.DisconnectAsync(true);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new InvalidOperationException($"Błąd MailKit podczas wysyłania e-maila: {ex.Message}", ex);
+                
             }
         }
     }

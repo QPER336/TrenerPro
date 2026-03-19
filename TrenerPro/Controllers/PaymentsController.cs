@@ -47,9 +47,6 @@ namespace TrenerPro.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ClientId,PaymentDate,Amount,Description,IsConfirmed")] Payment payment)
         {
-            // Opcjonalne: Sprawdzenie po stronie serwera czy nie próbujesz przypisać płatności do cudzego klienta
-            // (Tutaj ufamy liście rozwijanej, ale dla bezpieczeństwa można dodać sprawdzenie)
-
             if (ModelState.IsValid)
             {
                 _context.Add(payment);
@@ -63,14 +60,14 @@ namespace TrenerPro.Controllers
             return View(payment);
         }
 
-        // Akcja potwierdzenia płatności (dostępna np. z Dashboardu)
+        // Akcja potwierdzenia płatności
         public async Task<IActionResult> Confirm(int id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var payment = await _context.Payments
                 .Include(p => p.Client)
-                .FirstOrDefaultAsync(p => p.Id == id && p.Client.TrainerId == userId); // Zabezpieczenie
+                .FirstOrDefaultAsync(p => p.Id == id && p.Client.TrainerId == userId); 
 
             if (payment != null)
             {
@@ -90,7 +87,7 @@ namespace TrenerPro.Controllers
 
             var payment = await _context.Payments
                 .Include(p => p.Client)
-                .FirstOrDefaultAsync(m => m.Id == id && m.Client.TrainerId == userId); // Zabezpieczenie
+                .FirstOrDefaultAsync(m => m.Id == id && m.Client.TrainerId == userId); 
 
             if (payment == null) return NotFound();
 
